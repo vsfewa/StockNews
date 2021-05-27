@@ -1,3 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StockNews</string>
+    <string name="app_name">同花顺股市热点</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_choose">请选择你的兴趣吧</string>
+    <string name="favor1">数据哥</string>
+    <string name="favor2">研报哥</string>
+    <string name="favor3">国际哥</string>
+    <string name="skip">跳过</string>
+    <string name="start">开始你的赚钱之旅</string>
+    <string name="app">股市热点</string>
+    <string name="hot_news">热点掘金</string>
+    <string name="roll_news">24小时滚动</string>
 </resources>
