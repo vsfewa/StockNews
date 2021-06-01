@@ -7,9 +7,14 @@
     <string name="favor1">数据哥</string>
     <string name="favor2">研报哥</string>
     <string name="favor3">国际哥</string>
+    <string name="favor4">经济哥</string>
+    <string name="favor5">机会哥</string>
+    <string name="favor6">互动哥</string>
     <string name="skip">跳过</string>
     <string name="start">开始你的赚钱之旅</string>
     <string name="app">股市热点</string>
     <string name="hot_news">热点掘金</string>
     <string name="roll_news">24小时滚动</string>
+    <string name="detail">资讯详情</string>
+    <string name="load_more">上拉加载更多</string>
 </resources>

@@ -9,24 +9,29 @@
 
 
     <TextView
-        android:id="@+id/Title"
+        android:id="@+id/Title1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:gravity="center|center_horizontal"
         android:text="TextView"
         android:textColor="@color/black"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/Time"
+        android:id="@+id/Time1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="TextView"
+        android:textAlignment="textEnd"
         android:textColor="@color/black" />
 
     <TextView
-        android:id="@+id/Summary"
+        android:id="@+id/Summary1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="TextView"
         android:textColor="@color/black" />
 
@@ -34,6 +39,7 @@
         android:id="@+id/Stocks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="TextView"
         android:textColor="@color/black" />
 

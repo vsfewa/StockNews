@@ -3,8 +3,6 @@ package com.example.stocknews;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,14 +37,16 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
         holder.title.setText(hotnews.title);
         holder.time.setText(hotnews.getCtime());
         holder.summary.setText(hotnews.summary);
-        holder.stocks.setText("相关股票: " + hotnews.stocks);
+        holder.stocks.setText("相关证券: " + hotnews.stocks);
     }
 
     @Override
     public int getItemCount() {
         return newsList.size();
     }
-
+    /*
+    点击进入网页
+     */
     @Override
     public void onClick(View view) {
         int position = rvParent.getChildAdapterPosition(view);
@@ -63,9 +63,9 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.Title);
-            time = itemView.findViewById(R.id.Time);
-            summary = itemView.findViewById(R.id.Summary);
+            title = itemView.findViewById(R.id.Title1);
+            time = itemView.findViewById(R.id.Time1);
+            summary = itemView.findViewById(R.id.Summary1);
             stocks = itemView.findViewById(R.id.Stocks);
         }
 

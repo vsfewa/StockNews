@@ -21,7 +21,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.stocknews.MainActivity.HotnewsList;
+
+import static com.example.stocknews.OkHttpSSL.HotnewsList;
 
 
 public class HotnewsPageFragment extends Fragment {
@@ -39,11 +40,6 @@ public class HotnewsPageFragment extends Fragment {
 
 
 
-    private List<Integer> colors = new ArrayList<>();
-    {
-        colors.add(R.color.white);
-        colors.add(android.R.color.holo_blue_bright);
-    }
     private int mPosition;
     private List<HotNews> newsList = HotnewsList;
 
@@ -70,7 +66,6 @@ public class HotnewsPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RelativeLayout container = view.findViewById(R.id.container);
-        container.setBackgroundResource(colors.get(mPosition));;
     }
     private void initRecyclerview(){
         HotnewsRecyclerView = view.findViewById(R.id.Hotnewsview);
@@ -86,7 +81,7 @@ public class HotnewsPageFragment extends Fragment {
             }
         });
 
-                HotnewsRecyclerView.setAdapter(hotNewsAdapter);
+        HotnewsRecyclerView.setAdapter(hotNewsAdapter);
         HotnewsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         HotnewsRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
     }
@@ -98,9 +93,9 @@ public class HotnewsPageFragment extends Fragment {
             /**
              * 等待数据
              */
-            Thread.currentThread().sleep(2000);
+            Thread.currentThread().sleep(3000);
             fragmentList.add(HotnewsPageFragment.newInstance(0));
-            fragmentList.add(HotnewsPageFragment.newInstance(1));
+            fragmentList.add(RollnewsPageFragment.newInstance(1));
         }
 
         @NonNull
