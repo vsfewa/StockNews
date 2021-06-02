@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -25,10 +26,6 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
     private final int BUTTON_IN_ONE_LINE = 3;
     private final int BUTTON_WIDTH = 180;
     private final int BUTTON_HEIGHT = 150;
-    private final int LEFT_MARGIN = 130;
-    private final int WIDTH_GAP = 120;
-    private final int HEIGHT_GAP = 150;
-    private final int TOP_MARGIN = 440;
     private Button[] button = new Button[BUTTON_NUM];
     private List<String> FAVOR_TYPE = new ArrayList<>();
 
@@ -43,7 +40,14 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
         FAVOR_TYPE.add(this.getString(R.string.favor5));
         FAVOR_TYPE.add(this.getString(R.string.favor6));
         RelativeLayout relativeLayout = findViewById(R.id.button_view);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
         int row = 0;
+        /*
+        动态加载button
+         */
         for (int i = 0; i < BUTTON_NUM; i++) {
             button[i] = new Button(this);
             button[i].setId(i);
@@ -53,8 +57,8 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
             button[i].setOnClickListener(this);
             RelativeLayout.LayoutParams btParams = new RelativeLayout.LayoutParams(BUTTON_WIDTH, BUTTON_HEIGHT);
             if(i % BUTTON_IN_ONE_LINE == 0) row++;
-            btParams.leftMargin = LEFT_MARGIN + (BUTTON_WIDTH + WIDTH_GAP) * (i%3);
-            btParams.topMargin =  TOP_MARGIN +  (BUTTON_HEIGHT + HEIGHT_GAP) * row;
+            btParams.leftMargin = width/8 + (BUTTON_WIDTH + width/10) * (i % BUTTON_IN_ONE_LINE);
+            btParams.topMargin =  height/4 +  (BUTTON_HEIGHT + width/10) * row;
             relativeLayout.addView(button[i],btParams);
         }
     }

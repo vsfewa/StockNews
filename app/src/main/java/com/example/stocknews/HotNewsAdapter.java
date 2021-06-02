@@ -37,7 +37,9 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
         holder.title.setText(hotnews.title);
         holder.time.setText(hotnews.getCtime());
         holder.summary.setText(hotnews.summary);
-        holder.stocks.setText("相关证券: " + hotnews.stocks);
+        if(hotnews.stocks != null) {
+            holder.stocks.setText("相关证券: " + hotnews.stocks);
+        }
     }
 
     @Override

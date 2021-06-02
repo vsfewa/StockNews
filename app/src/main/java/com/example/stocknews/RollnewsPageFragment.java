@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -118,7 +119,12 @@ public class RollnewsPageFragment  extends Fragment {
                 e.printStackTrace();
             }
             swipeRefreshLayout.setRefreshing(false);
-            rollNewsAdapter.notifyDataSetChanged();
+            if(newsList != null) {
+                rollNewsAdapter.notifyDataSetChanged();
+            }
+            else {
+                Toast.makeText(getActivity(),"网络请求失败,请检查网络!",Toast.LENGTH_LONG);
+            }
         });
     }
 }

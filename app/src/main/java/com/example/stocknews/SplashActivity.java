@@ -1,6 +1,7 @@
 package com.example.stocknews;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends AppCompatActivity {
 
 
     private static final int SPLASH_DELAY_MILLIS = 2000;
@@ -86,7 +87,7 @@ public class SplashActivity extends Activity {
             if (hasPermissionDismiss) {
                 Toast.makeText(this,
                         "为了更好地为您提供服务,请通过权限申请",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
                 getPermission();
             }else{
                 new Handler().postDelayed(() -> jump(), SPLASH_DELAY_MILLIS);
