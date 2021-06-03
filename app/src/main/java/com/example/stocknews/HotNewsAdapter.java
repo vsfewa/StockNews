@@ -15,6 +15,8 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
     private Context context;
     private List<HotNews> newsList = new ArrayList<>();
     private RecyclerView rvParent;
+    private final String NULL = "default";
+    private final String pre = "相关证券: ";
 
     public HotNewsAdapter(Context context, List<HotNews> newsList) {
         this.context = context;
@@ -34,11 +36,13 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
     @Override
     public void onBindViewHolder(@NonNull HotNewsAdapter.myViewHolder holder, int position) {
         HotNews hotnews = newsList.get(position);
-        holder.title.setText(hotnews.title);
+        holder.title.setText("  "+hotnews.title);
         holder.time.setText(hotnews.getCtime());
-        holder.summary.setText(hotnews.summary);
         if(hotnews.stocks != null) {
-            holder.stocks.setText("相关证券: " + hotnews.stocks);
+            holder.stocks.setText(pre + hotnews.stocks);
+        }
+        else{
+            holder.stocks.setText(NULL);
         }
     }
 
@@ -60,14 +64,12 @@ public class HotNewsAdapter extends RecyclerView.Adapter<HotNewsAdapter.myViewHo
     class myViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private TextView time;
-        private TextView summary;
         private TextView stocks;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.Title1);
             time = itemView.findViewById(R.id.Time1);
-            summary = itemView.findViewById(R.id.Summary1);
             stocks = itemView.findViewById(R.id.Stocks);
         }
 

@@ -27,6 +27,8 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DELAY_MILLIS = 2000;
     private static final int DATABASE_NULL = 0;
+    private static final int DENIED = -1;
+    private static final String NOTICE = "为了更好地为您提供服务,请通过权限申请";
     public int sqlnumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
          */
         if (!mPermissionList.isEmpty()) {
             ActivityCompat.requestPermissions(this, Permissions, mRequestCode);
-            Log.d("call", "success");
         } else {
             new Handler().postDelayed(() -> jump(), SPLASH_DELAY_MILLIS);
         }
@@ -76,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
         boolean hasPermissionDismiss = false;
         if (mRequestCode == requestCode) {
             for (int grantResult : grantResults) {
-                if (grantResult == -1) {
+                if (grantResult == DENIED) {
                     hasPermissionDismiss = true;
                     break;
                 }
@@ -86,7 +87,7 @@ public class SplashActivity extends AppCompatActivity {
              */
             if (hasPermissionDismiss) {
                 Toast.makeText(this,
-                        "为了更好地为您提供服务,请通过权限申请",
+                        NOTICE,
                         Toast.LENGTH_SHORT).show();
                 getPermission();
             }else{
@@ -95,7 +96,9 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
 
-
+    /*
+    根判断用户是否进行偏好选择
+     */
     private void jump() {
         DBHelper dh = new DBHelper(SplashActivity.this,"stock_news.db",1);
         SQLiteDatabase newsdb = dh.getWritableDatabase();

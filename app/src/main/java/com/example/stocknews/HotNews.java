@@ -3,6 +3,9 @@ package com.example.stocknews;
 import java.io.Serializable;
 import java.util.List;
 
+/*
+热点掘金新闻
+ */
 public class HotNews implements Serializable {
     public String title;
     public String ctime;

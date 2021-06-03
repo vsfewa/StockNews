@@ -3,6 +3,8 @@ package com.example.stocknews;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,8 +26,8 @@ import java.util.List;
 import static com.example.stocknews.MainActivity.RECENT_URL;
 import static com.example.stocknews.OkHttpSSL.RefreshTime;
 import static com.example.stocknews.OkHttpSSL.RollNewsPost;
-import static com.example.stocknews.OkHttpSSL.RollNewsPre;
-import static com.example.stocknews.OkHttpSSL.RollnewsList;
+import static com.example.stocknews.OkHttpSSL.RollNewsPre;;
+import static com.example.stocknews.OkHttpSSL.getHotnewswithOkHttp;
 import static com.example.stocknews.OkHttpSSL.getRollnewswithOkHttp;
 
 public class RollnewsPageFragment  extends Fragment {
@@ -42,8 +45,9 @@ public class RollnewsPageFragment  extends Fragment {
 
 
     private int mPosition;
-    private List<RollNews> newsList = RollnewsList;
+    private List<RollNews> newsList;
     private RollNewsAdapter rollNewsAdapter;
+    private Handler mHandler;
 
     private View view;//定义view用来设置fragment的layout
     public RecyclerView RollnewsRecyclerView;
@@ -72,59 +76,78 @@ public class RollnewsPageFragment  extends Fragment {
 
     private void initRecyclerview() {
         RollnewsRecyclerView = view.findViewById(R.id.roll_news_view);
-        Log.d("see it", String.valueOf(newsList));
-        rollNewsAdapter = new RollNewsAdapter(getActivity(), newsList);
-        RollnewsRecyclerView.setAdapter(rollNewsAdapter);
-        LinearLayoutManager RollnewsviewLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        RollnewsRecyclerView.setLayoutManager(RollnewsviewLayoutManager);
-        RollnewsRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
-        RollnewsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            int lastVisibleItem = 0;
+        mHandler = new Handler() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (rollNewsAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 ==
-                        rollNewsAdapter.getItemCount()) {
-                        RefreshTime = RefreshTime + 1;
-                        String url = RollNewsPre + RefreshTime + RollNewsPost ;
-                        newsList = getRollnewswithOkHttp(url);
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    /*
-                    刷新界面
-                     */
-                    rollNewsAdapter.notifyDataSetChanged();
-
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 2:
+                        rollNewsAdapter = new RollNewsAdapter(getActivity(), newsList);
+                        RollnewsRecyclerView.setAdapter(rollNewsAdapter);
+                        LinearLayoutManager RollnewsviewLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                        RollnewsRecyclerView.setLayoutManager(RollnewsviewLayoutManager);
+                        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                        divider.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divide));
+                        RollnewsRecyclerView.addItemDecoration(divider);
+                        RollnewsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            int lastVisibleItem = 0;
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (rollNewsAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 ==
+                                        rollNewsAdapter.getItemCount()) {
+                                    RefreshTime = RefreshTime ++;
+                                    String url = RollNewsPre + RefreshTime + RollNewsPost;
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            newsList = getRollnewswithOkHttp(url);
+                                            mHandler.sendEmptyMessage(3);
+                                        }
+                                    }).start();
+                                }
+                            }
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                lastVisibleItem = RollnewsviewLayoutManager.findLastVisibleItemPosition();
+                            }
+                        });
+                        break;
+                    case 3:
+                        rollNewsAdapter.setData(newsList);
+                        rollNewsAdapter.notifyDataSetChanged();
+                    case 4:
+                        rollNewsAdapter.setData(newsList);
+                        rollNewsAdapter.notifyDataSetChanged();
                 }
             }
+        };
 
+        new Thread(new Runnable() {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = RollnewsviewLayoutManager.findLastVisibleItemPosition();
+            public void run() {
+                newsList = getRollnewswithOkHttp(RECENT_URL);
+                mHandler.sendEmptyMessage(2);
             }
-        });
+        }).start();
+        Log.d("see it", String.valueOf(newsList));
+
         swipeRefreshLayout = view.findViewById(R.id.swipeLayout);
         swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             newsList.clear();
-            newsList = getRollnewswithOkHttp(RECENT_URL);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    newsList = getRollnewswithOkHttp(RECENT_URL);
+                    mHandler.sendEmptyMessage(4);
+                }
+            }).start();
             swipeRefreshLayout.setRefreshing(false);
-            if(newsList != null) {
-                rollNewsAdapter.notifyDataSetChanged();
-            }
-            else {
-                Toast.makeText(getActivity(),"网络请求失败,请检查网络!",Toast.LENGTH_LONG);
-            }
         });
     }
+
 }
+

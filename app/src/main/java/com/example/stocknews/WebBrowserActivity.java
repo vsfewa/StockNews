@@ -8,7 +8,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import androidx.appcompat.widget.Toolbar;
 
-import static com.example.stocknews.OkHttpSSL.HotnewsList;
+
 
 
 public class WebBrowserActivity extends AppCompatActivity {
@@ -25,11 +25,12 @@ public class WebBrowserActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         int position = i.getIntExtra("position",1);
-        if(HotnewsList.get(position).url!=null){
+        String url = i.getStringExtra("url");
+        if(url!=null){
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
             //加载需要显示的网页
-            webView.loadUrl(HotnewsList.get(position).url);
+            webView.loadUrl(url);
         }
     }
 }

@@ -22,12 +22,20 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
 
     private final int [] FAVOR = {1,2,3,4,5,6};
     private final int TEST_UID = 1;
+    /*
+    按钮总数，每行按钮数
+     */
     private final int BUTTON_NUM = 6;
     private final int BUTTON_IN_ONE_LINE = 3;
+    /*按钮大小
+
+     */
     private final int BUTTON_WIDTH = 180;
     private final int BUTTON_HEIGHT = 150;
     private Button[] button = new Button[BUTTON_NUM];
+    private boolean[] selected = new boolean[BUTTON_NUM];
     private List<String> FAVOR_TYPE = new ArrayList<>();
+    private  ContentValues cv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +70,20 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
             relativeLayout.addView(button[i],btParams);
         }
     }
-
+    /*
+    按钮监听事件，设置选中状态，保存用户偏好
+     */
     public void onClick(View v) {
-        DBHelper db = new DBHelper(ChooseFavorActivity.this,"stock_news.db",1);
-        SQLiteDatabase favordb = db.getWritableDatabase();
-        ContentValues cv = new ContentValues();
         for (int i = 0; i < button.length; i++) {
             if (v.getId() == button[i].getId()) {
-                cv.put("uid",TEST_UID);
-                cv.put("favor",FAVOR[i]);
-                favordb.insert("User_Favor", null, cv);
-                cv.clear();
-                button[i].setBackgroundResource(R.drawable.button_click);
+                if (selected[i] != true) {
+                    button[i].setBackgroundResource(R.drawable.button_click);
+                    selected[i] = true;
+                }
+                else {
+                    button[i].setBackgroundResource(R.drawable.button_bg);
+                    selected[i] = false;
+                }
             }
         }
         switch (v.getId())
@@ -82,6 +92,7 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
                 JumptoNews();
                 break;
             case R.id.button_start:
+                setFAVOR();
                 JumptoNews();
                 break;
         }
@@ -91,6 +102,19 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
         Intent intent = new Intent(ChooseFavorActivity.this, MainActivity.class);
         this.startActivity(intent);
         this.finish();
+    }
+    public void setFAVOR(){
+        DBHelper db = new DBHelper(ChooseFavorActivity.this,"stock_news.db",1);
+        SQLiteDatabase favordb = db.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        for (int i = 0; i < button.length; i++) {
+            if (selected[i] == true) {
+                cv.put("uid",TEST_UID);
+                cv.put("favor",FAVOR[i]);
+                favordb.insert("User_Favor", null, cv);
+                cv.clear();
+            }
+        }
     }
     @Override
     protected void onDestroy() {

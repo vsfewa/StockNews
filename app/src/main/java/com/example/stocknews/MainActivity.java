@@ -3,15 +3,17 @@ package com.example.stocknews;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +21,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
+import static com.example.stocknews.OkHttpSSL.HotNewsUrl;
+import static com.example.stocknews.OkHttpSSL.PRE_NUM;
+import static com.example.stocknews.OkHttpSSL.RefreshTime;
 import static com.example.stocknews.OkHttpSSL.getHotnewswithOkHttp;
 import static com.example.stocknews.OkHttpSSL.getRollnewswithOkHttp;
+import static com.example.stocknews.OkHttpSSL.parseHotnewsJsonWithGson;
+import static com.example.stocknews.OkHttpSSL.parseRollnewsJsonWithGson;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,12 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         type.add(this.getString(R.string.hot_news));
         type.add(this.getString(R.string.roll_news));
-        getHotnewswithOkHttp();
-        getRollnewswithOkHttp(RECENT_URL);
         viewPager = findViewById(R.id.Viewpager);
         HotnewsPageFragment.ViewPagerFragmentStateAdapter viewPagerAdapter = null;
         try {
@@ -50,8 +53,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         viewPager.setAdapter(viewPagerAdapter);
         column = findViewById(R.id.Column);
+        /*
+        页面滑动切换设置
+         */
         new TabLayoutMediator(column, viewPager, true, (tab, position) -> tab.setText(type.get(position))).attach();
     }
 

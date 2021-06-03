@@ -4,12 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
@@ -29,7 +27,9 @@ public class RollNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.context = context;
         this.newsList = newsList;
     }
-
+    public void setData(List<RollNews> newsList){
+        this.newsList = newsList;
+    }
 
 
     @NonNull
@@ -64,7 +64,7 @@ public class RollNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
     @Override
     public int getItemCount() {
-        return newsList.size()+1;
+        return newsList.size()+START_REFRESH;
     }
     public int getListSize() {
         return newsList.size();
@@ -90,6 +90,9 @@ public class RollNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
     }
+    /*
+    底部上拉加载
+     */
     public static class FooterViewHolder extends ViewHolder {
         private TextView tvLoadMore;
         public ProgressBar pbLoading;

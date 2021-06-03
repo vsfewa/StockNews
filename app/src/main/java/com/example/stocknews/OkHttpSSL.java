@@ -15,6 +15,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.xml.transform.sax.TemplatesHandler;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,9 +30,7 @@ public class OkHttpSSL {
     public static final String RollNewsPre = "https://m.10jqka.com.cn/thsgd_list/index_";
     public static final String RollNewsPost = ".json";
     public static int RefreshTime = 1;
-    public static List<HotNews>  HotnewsList = new ArrayList<>();
-    public static List<RollNews>  RollnewsList = new ArrayList<>();
-    private static final int PRE_NUM = 77;
+    static final int PRE_NUM = 77;
 
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
@@ -67,36 +66,32 @@ public class OkHttpSSL {
             throw new RuntimeException(e);
         }
     }
-    public static void getHotnewswithOkHttp(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpURLConnection connection = null;
-                try {
-                    OkHttpClient client = OkHttpSSL.getUnsafeOkHttpClient();
-                    Request request = new Request.Builder()
+    /*
+    热点掘金数据请求
+     */
+    public static List<HotNews> getHotnewswithOkHttp(){
+        List<HotNews> HotnewsList = new ArrayList<>();
+        HttpURLConnection connection = null;
+        try {
+            OkHttpClient client = OkHttpSSL.getUnsafeOkHttpClient();
+            Request request = new Request.Builder()
                             .url(HotNewsUrl)
                             .get()
                             .build();
-                    Response response = client.newCall(request).execute();
-                    String responseData = response.body().string().replace("{\"pageItems\":","").replace(",\"columnName\":\"\\u4eca\\u65e5\\u8981\\u95fb\",\"pages\":1,\"total\":35,\"currentPage\":1}","");
-                    Log.d("MainActivity1",responseData);
-                    HotnewsList= parseHotnewsJsonWithGson(responseData);
-                } catch (Exception e) {
+            Response response = client.newCall(request).execute();
+            String responseData = response.body().string().replace("{\"pageItems\":","").replace(",\"columnName\":\"\\u4eca\\u65e5\\u8981\\u95fb\",\"pages\":1,\"total\":35,\"currentPage\":1}","");
+            Log.d("MainActivity1",responseData);
+            HotnewsList= parseHotnewsJsonWithGson(responseData);
+        } catch (Exception e) {
                     e.printStackTrace();
-                } /*finally {
-                            if (connection != null) {
-                                connection.disconnect();
-                            }
-                        }*/
-            }
-        }).start();
+        }
+        return HotnewsList;
     }
-    public static List<RollNews> getRollnewswithOkHttp(String tempurl){
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    /*
+    24小时滚动新闻数据请求
+     */
+    public static  List<RollNews> getRollnewswithOkHttp(String tempurl){
+        List<RollNews>  RollnewsList = new ArrayList<>();
                 HttpURLConnection connection = null;
                 try {
                     OkHttpClient client = OkHttpSSL.getUnsafeOkHttpClient();
@@ -122,12 +117,13 @@ public class OkHttpSSL {
                         connection.disconnect();
                     }
                 }
-            }
-        }).start();
+
         return  RollnewsList;
     }
     public static List<HotNews> parseHotnewsJsonWithGson(String jsonData) {
-        //使用轻量级的Gson解析得到的json
+        /*
+        使用轻量级的Gson解析得到的json
+         */
         Gson gson = new Gson();
         List<HotNews> HotnewsList = gson.fromJson(jsonData, new TypeToken<List<HotNews>>() {}.getType());
         return HotnewsList;

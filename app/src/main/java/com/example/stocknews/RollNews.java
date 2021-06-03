@@ -1,5 +1,8 @@
 package com.example.stocknews;
 
+/*
+24小时滚动新闻数据
+ */
 public class RollNews {
     public String title;
     public String ctime;
