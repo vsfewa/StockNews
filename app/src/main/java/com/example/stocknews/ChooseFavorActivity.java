@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.stocknews.DBHelper.NAME;
+import static com.example.stocknews.DBHelper.setFAVOR;
+
 
 public class ChooseFavorActivity extends Activity implements View.OnClickListener{
 
@@ -35,7 +38,7 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
     private Button[] button = new Button[BUTTON_NUM];
     private boolean[] selected = new boolean[BUTTON_NUM];
     private List<String> FAVOR_TYPE = new ArrayList<>();
-    private  ContentValues cv;
+    private DBHelper myDBHelper = DBHelper.getInstance(this,NAME,1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +95,9 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
                 JumptoNews();
                 break;
             case R.id.button_start:
-                setFAVOR();
+                for(int i = 0; i < button.length; i++) {
+                    setFAVOR(myDBHelper,selected[i],TEST_UID,FAVOR[i]);
+                }
                 JumptoNews();
                 break;
         }
@@ -103,19 +108,7 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
         this.startActivity(intent);
         this.finish();
     }
-    public void setFAVOR(){
-        DBHelper db = new DBHelper(ChooseFavorActivity.this,"stock_news.db",1);
-        SQLiteDatabase favordb = db.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        for (int i = 0; i < button.length; i++) {
-            if (selected[i] == true) {
-                cv.put("uid",TEST_UID);
-                cv.put("favor",FAVOR[i]);
-                favordb.insert("User_Favor", null, cv);
-                cv.clear();
-            }
-        }
-    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

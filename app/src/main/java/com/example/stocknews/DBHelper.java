@@ -1,5 +1,6 @@
 package com.example.stocknews;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,11 +12,21 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DBHelper extends SQLiteOpenHelper {
+    private static DBHelper myDBHelper;
+    private static final String Column_1 = "uid";
+    private static final String Column_2 = "favor";
+    public static final String NAME = "stock_news.db";
     public DBHelper(Context context,String name,int version) {
         super(context, name, null, version);
     }
 
-    @Override
+    public  static DBHelper getInstance(Context context,String name,int version) {
+        if (myDBHelper == null) {
+            myDBHelper = new DBHelper(context, name, version);
+        }
+        return myDBHelper;
+    }
+
     public void onCreate(SQLiteDatabase db) {
         String createUserTable = "create table User_Favor (uid INTEGER NOT NULL,favor int)";
         String createHotNewsTable = "create table Hot_News (hnid INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,ctime DATETIME,title VARCHAR,url VARCHAR,summary TEXT)";
@@ -27,6 +38,17 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+    public static void setFAVOR(DBHelper dbHelper,boolean state,int uid, int favor){
+        SQLiteDatabase favordb = dbHelper.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+            if (state == true) {
+                cv.put(Column_1,uid);
+                cv.put(Column_2,favor);
+                favordb.insert("User_Favor", null, cv);
+                cv.clear();
+            }
 
     }
 

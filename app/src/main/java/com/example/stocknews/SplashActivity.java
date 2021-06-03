@@ -30,6 +30,7 @@ public class SplashActivity extends AppCompatActivity {
     private static final int DENIED = -1;
     private static final String NOTICE = "为了更好地为您提供服务,请通过权限申请";
     public int sqlnumber;
+    private DBHelper myDBHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +101,9 @@ public class SplashActivity extends AppCompatActivity {
     根判断用户是否进行偏好选择
      */
     private void jump() {
-        DBHelper dh = new DBHelper(SplashActivity.this,"stock_news.db",1);
-        SQLiteDatabase newsdb = dh.getWritableDatabase();
-        @SuppressLint("Recycle") Cursor c = newsdb.rawQuery("select * from User_Favor", null);
+        myDBHelper = DBHelper.getInstance(this,DBHelper.NAME,1);
+        SQLiteDatabase newsdb = myDBHelper.getWritableDatabase();
+        Cursor c = newsdb.rawQuery("select * from User_Favor", null);
         sqlnumber =c.getCount();
         if(sqlnumber==DATABASE_NULL) {
             Intent intent = new Intent(SplashActivity.this, ChooseFavorActivity.class);
@@ -114,6 +115,7 @@ public class SplashActivity extends AppCompatActivity {
             SplashActivity.this.startActivity(intent);
             SplashActivity.this.finish();
         }
+        c.close();
     }
 
 }

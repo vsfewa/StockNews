@@ -48,6 +48,7 @@ public class RollnewsPageFragment  extends Fragment {
     private List<RollNews> newsList;
     private RollNewsAdapter rollNewsAdapter;
     private Handler mHandler;
+    private static final int REFRESH = 1;
 
     private View view;//定义view用来设置fragment的layout
     public RecyclerView RollnewsRecyclerView;
@@ -76,10 +77,9 @@ public class RollnewsPageFragment  extends Fragment {
 
     private void initRecyclerview() {
         RollnewsRecyclerView = view.findViewById(R.id.roll_news_view);
-        mHandler = new Handler() {
+        mHandler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
+            public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case 2:
                         rollNewsAdapter = new RollNewsAdapter(getActivity(), newsList);
@@ -96,7 +96,7 @@ public class RollnewsPageFragment  extends Fragment {
                                 super.onScrollStateChanged(recyclerView, newState);
                                 if (rollNewsAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 ==
                                         rollNewsAdapter.getItemCount()) {
-                                    RefreshTime = RefreshTime ++;
+                                    RefreshTime = RefreshTime + REFRESH;
                                     String url = RollNewsPre + RefreshTime + RollNewsPost;
                                     new Thread(new Runnable() {
                                         @Override
@@ -121,8 +121,9 @@ public class RollnewsPageFragment  extends Fragment {
                         rollNewsAdapter.setData(newsList);
                         rollNewsAdapter.notifyDataSetChanged();
                 }
+                return true;
             }
-        };
+        });
 
         new Thread(new Runnable() {
             @Override
