@@ -1,10 +1,7 @@
 package com.example.stocknews;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -12,13 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.stocknews.DBHelper.NAME;
-import static com.example.stocknews.DBHelper.setFAVOR;
 
 
 public class ChooseFavorActivity extends Activity implements View.OnClickListener{
@@ -95,7 +89,7 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.button_start:
                 for(int i = 0; i < button.length; i++) {
-                    setFAVOR(selected[i],TEST_UID,FAVOR[i]);
+                    DBHelper.getInstance().setFAVOR(selected[i],TEST_UID,FAVOR[i]);
                 }
                 JumptoNews();
                 break;

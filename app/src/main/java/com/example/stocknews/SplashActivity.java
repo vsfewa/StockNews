@@ -6,23 +6,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.stocknews.DBHelper.check_if_nulldatabase;
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -103,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
     根判断用户是否进行偏好选择
      */
     private void jump() {
-        sqlnumber = check_if_nulldatabase();
+        sqlnumber = DBHelper.getInstance().check_if_nulldatabase();
         if(sqlnumber==DATABASE_NULL) {
             Intent intent = new Intent(SplashActivity.this, ChooseFavorActivity.class);
             SplashActivity.this.startActivity(intent);
