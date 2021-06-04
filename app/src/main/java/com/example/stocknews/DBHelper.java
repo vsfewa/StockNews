@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
     public  void setFAVOR(boolean state,int uid, int favor){
-        SQLiteDatabase favordb =DBHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase favordb = getWritableDatabase();
         ContentValues cv = new ContentValues();
             if (state == true) {
                 cv.put(Column_1,uid);
@@ -57,8 +57,8 @@ public class DBHelper extends SQLiteOpenHelper {
             }
 
     }
-    public  int check_if_nulldatabase(){ ;
-        SQLiteDatabase newsdb = DBHelper.getInstance().getWritableDatabase();
+    public int check_if_nulldatabase(){ ;
+        SQLiteDatabase newsdb = getWritableDatabase();
         Cursor c = newsdb.rawQuery("select * from User_Favor", null);
         int sqlnumber =c.getCount();
         c.close();
