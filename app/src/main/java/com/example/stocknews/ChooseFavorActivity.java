@@ -88,9 +88,14 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
                 JumptoNews();
                 break;
             case R.id.button_start:
-                for(int i = 0; i < button.length; i++) {
-                    DBHelper.getInstance().setFAVOR(selected[i],TEST_UID,FAVOR[i]);
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 0; i < button.length; i++) {
+                            DBHelper.getInstance().setFAVOR(selected[i],TEST_UID,FAVOR[i]);
+                        }
+                    }
+                }).start();
                 JumptoNews();
                 break;
         }

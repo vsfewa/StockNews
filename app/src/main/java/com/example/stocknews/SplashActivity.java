@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -97,17 +98,32 @@ public class SplashActivity extends AppCompatActivity {
     根判断用户是否进行偏好选择
      */
     private void jump() {
-        sqlnumber = DBHelper.getInstance().check_if_nulldatabase();
-        if(sqlnumber==DATABASE_NULL) {
-            Intent intent = new Intent(SplashActivity.this, ChooseFavorActivity.class);
-            SplashActivity.this.startActivity(intent);
-            SplashActivity.this.finish();
-        }
-        else{
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            SplashActivity.this.startActivity(intent);
-            SplashActivity.this.finish();
-        }
+        Handler mhandler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message message) {
+                switch (message.what){
+                    case 20:
+                        if(sqlnumber==DATABASE_NULL) {
+                            Intent intent = new Intent(SplashActivity.this, ChooseFavorActivity.class);
+                            SplashActivity.this.startActivity(intent);
+                            SplashActivity.this.finish();
+                        }
+                        else{
+                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                            SplashActivity.this.startActivity(intent);
+                            SplashActivity.this.finish();
+                        }
+                }
+                return true;
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sqlnumber = DBHelper.getInstance().check_if_nulldatabase();
+                mhandler.sendEmptyMessage(20);
+            }
+        }).start();
     }
 
 }
