@@ -2,6 +2,7 @@ package com.example.stocknews;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -16,13 +17,18 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String Column_1 = "uid";
     private static final String Column_2 = "favor";
     public static final String NAME = "stock_news.db";
+    public static final int VERSION = 1;
     public DBHelper(Context context,String name,int version) {
         super(context, name, null, version);
     }
 
-    public  static DBHelper getInstance(Context context,String name,int version) {
+    public  static DBHelper getInstance() {
         if (myDBHelper == null) {
-            myDBHelper = new DBHelper(context, name, version);
+            synchronized (DBHelper.class){
+                if(myDBHelper == null){
+                    myDBHelper = new DBHelper(AppContext.getContext(), NAME, VERSION);
+                }
+            }
         }
         return myDBHelper;
     }
@@ -40,7 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public static void setFAVOR(DBHelper dbHelper,boolean state,int uid, int favor){
+    public static void setFAVOR(boolean state,int uid, int favor){
+        DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase favordb = dbHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
             if (state == true) {
@@ -50,6 +57,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 cv.clear();
             }
 
+    }
+    public static int check_if_nulldatabase(){
+        myDBHelper = DBHelper.getInstance();
+        SQLiteDatabase newsdb = myDBHelper.getWritableDatabase();
+        Cursor c = newsdb.rawQuery("select * from User_Favor", null);
+        int sqlnumber =c.getCount();
+        c.close();
+        return sqlnumber;
     }
 
 }

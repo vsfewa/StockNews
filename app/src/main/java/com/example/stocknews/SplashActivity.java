@@ -22,6 +22,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.stocknews.DBHelper.check_if_nulldatabase;
+
 public class SplashActivity extends AppCompatActivity {
 
 
@@ -101,10 +103,7 @@ public class SplashActivity extends AppCompatActivity {
     根判断用户是否进行偏好选择
      */
     private void jump() {
-        myDBHelper = DBHelper.getInstance(this,DBHelper.NAME,1);
-        SQLiteDatabase newsdb = myDBHelper.getWritableDatabase();
-        Cursor c = newsdb.rawQuery("select * from User_Favor", null);
-        sqlnumber =c.getCount();
+        sqlnumber = check_if_nulldatabase();
         if(sqlnumber==DATABASE_NULL) {
             Intent intent = new Intent(SplashActivity.this, ChooseFavorActivity.class);
             SplashActivity.this.startActivity(intent);
@@ -115,7 +114,6 @@ public class SplashActivity extends AppCompatActivity {
             SplashActivity.this.startActivity(intent);
             SplashActivity.this.finish();
         }
-        c.close();
     }
 
 }

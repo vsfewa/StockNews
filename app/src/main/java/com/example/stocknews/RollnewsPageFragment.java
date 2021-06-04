@@ -97,11 +97,13 @@ public class RollnewsPageFragment  extends Fragment {
                                 if (rollNewsAdapter != null && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 ==
                                         rollNewsAdapter.getItemCount()) {
                                     RefreshTime = RefreshTime + REFRESH;
+                                    //RefreshTime ++;
                                     String url = RollNewsPre + RefreshTime + RollNewsPost;
+                                    Log.d("checktime", String.valueOf(RefreshTime));
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            newsList = getRollnewswithOkHttp(url);
+                                            newsList = getRollnewswithOkHttp(newsList,url);
                                             mHandler.sendEmptyMessage(3);
                                         }
                                     }).start();
@@ -119,6 +121,7 @@ public class RollnewsPageFragment  extends Fragment {
                         rollNewsAdapter.notifyDataSetChanged();
                     case 4:
                         rollNewsAdapter.setData(newsList);
+                        swipeRefreshLayout.setRefreshing(false);
                         rollNewsAdapter.notifyDataSetChanged();
                 }
                 return true;
@@ -128,7 +131,7 @@ public class RollnewsPageFragment  extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                newsList = getRollnewswithOkHttp(RECENT_URL);
+                newsList = getRollnewswithOkHttp(newsList,RECENT_URL);
                 mHandler.sendEmptyMessage(2);
             }
         }).start();
@@ -142,11 +145,11 @@ public class RollnewsPageFragment  extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    newsList = getRollnewswithOkHttp(RECENT_URL);
+                    newsList = getRollnewswithOkHttp(newsList,RECENT_URL);
                     mHandler.sendEmptyMessage(4);
                 }
             }).start();
-            swipeRefreshLayout.setRefreshing(false);
+
         });
     }
 

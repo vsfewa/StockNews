@@ -90,8 +90,10 @@ public class OkHttpSSL {
     /*
     24小时滚动新闻数据请求
      */
-    public static  List<RollNews> getRollnewswithOkHttp(String tempurl){
-        List<RollNews>  RollnewsList = new ArrayList<>();
+    public static  List<RollNews> getRollnewswithOkHttp(List<RollNews>  RollnewsList,String tempurl){
+                List<RollNews> newsList = RollnewsList;
+                boolean first = false;
+                if(RollnewsList == null) first = true;
                 HttpURLConnection connection = null;
                 try {
                     OkHttpClient client = OkHttpSSL.getUnsafeOkHttpClient();
@@ -107,8 +109,11 @@ public class OkHttpSSL {
                     responseData = responseData.substring(0,responseData.length()-1);
                     Log.d("MainActivity2",responseData);
                     List <RollNews> update = parseRollnewsJsonWithGson(responseData);
-                    for(RollNews news: update){
-                        RollnewsList.add(news);
+                    if (first == true) newsList = update;
+                    else {
+                        for (RollNews news : update) {
+                            newsList.add(news);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -118,7 +123,7 @@ public class OkHttpSSL {
                     }
                 }
 
-        return  RollnewsList;
+        return  newsList;
     }
     public static List<HotNews> parseHotnewsJsonWithGson(String jsonData) {
         /*

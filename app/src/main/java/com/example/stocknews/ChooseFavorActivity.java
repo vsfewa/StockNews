@@ -38,7 +38,6 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
     private Button[] button = new Button[BUTTON_NUM];
     private boolean[] selected = new boolean[BUTTON_NUM];
     private List<String> FAVOR_TYPE = new ArrayList<>();
-    private DBHelper myDBHelper = DBHelper.getInstance(this,NAME,1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +95,7 @@ public class ChooseFavorActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.button_start:
                 for(int i = 0; i < button.length; i++) {
-                    setFAVOR(myDBHelper,selected[i],TEST_UID,FAVOR[i]);
+                    setFAVOR(selected[i],TEST_UID,FAVOR[i]);
                 }
                 JumptoNews();
                 break;
